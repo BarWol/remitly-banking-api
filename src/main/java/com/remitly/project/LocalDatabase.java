@@ -31,7 +31,7 @@ public class LocalDatabase implements AutoCloseable {
    }
 
 
-   private void connect(String password) {
+   public void connect(String password) {
         Properties props = new Properties();
         String url = String.format("jdbc:postgresql://db:%d/%s", port, database);
         props.setProperty("user", username);
