@@ -31,9 +31,9 @@ public class LocalDatabase implements AutoCloseable {
    }
 
 
-   public void connect(String password) {
+   public void connect(String password,String host) {
         Properties props = new Properties();
-        String url = String.format("jdbc:postgresql://db:%d/%s", port, database);
+        String url = String.format("jdbc:postgresql://%s:%d/%s",host, port, database);
         props.setProperty("user", username);
         props.setProperty("password", password);
         Connection conn = null;
@@ -46,7 +46,7 @@ public class LocalDatabase implements AutoCloseable {
                 conn = DriverManager.getConnection(url, props);
             } catch (SQLException e) {
                 lastException = e;
-                logger.warn("Failed to connect to the PostgreSQL database! Retrying in {}s.", backoff);
+                logger.warn("Failed to connect to PostgreSQL! Retrying in {}s. Error: {}", backoff, e.getMessage());
             }
             try {
                 Thread.sleep(backoff * 1000);
@@ -63,14 +63,22 @@ public class LocalDatabase implements AutoCloseable {
         }
 
     }
-    public LocalDatabase(){
+    public LocalDatabase(int port, String host){
+        this.port = port;
+        this.database = "example";
+        this.username = "postgres";
+        String password = "remitly-4343";
+        this.connect(password,host);
+
+   }
+   public LocalDatabase(){
         this.port = 5_432;
         this.database = "example";
         this.username = "postgres";
         String password = "remitly-4343";
-        this.connect(password);
+        this.connect(password,"db");
 
-   }
+    }
 
     @Override
     public void close() throws Exception {

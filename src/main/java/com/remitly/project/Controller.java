@@ -53,7 +53,7 @@ public class Controller {
     }
 
     @GetMapping("/{swiftCode}")
-    public String getSwiftCode(@PathVariable String swiftCode) {
+    public ResponseEntity<String> getSwiftCode(@PathVariable String swiftCode) {
         var mapper = new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT);
         // Customize the pretty printer with 4-space indentation
         DefaultPrettyPrinter prettyPrinter = new DefaultPrettyPrinter();
@@ -64,15 +64,22 @@ public class Controller {
             List<Branch> branches = getBranches(swiftCode);
             Hq hq = getHeadquarter(swiftCode, branches);
             try {
-                return mapper.writer(prettyPrinter).writeValueAsString(hq);
+                if (hq == null) {
+                    return new ResponseEntity<>("message: headquarters with this swiftCode does not exist", HttpStatus.NOT_FOUND);
+                }
+                return ResponseEntity.ok(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(hq));
             } catch (Exception e) {
                 e.printStackTrace();
-                return "Error converting to JSON: " + e.getMessage();
+                return new ResponseEntity<>("message: failed to retrieve headquarters, sql exception", HttpStatus.BAD_REQUEST);
             }
         } else {
             Branch branch = getBranch(swiftCode);
             try {
-                return mapper.writer(prettyPrinter).writeValueAsString(branch);
+                if(branch == null)
+                {
+                    return new ResponseEntity<>("message: branch with this swiftCode does not exist", HttpStatus.NOT_FOUND);
+                }
+                return ResponseEntity.ok(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(branch));
             } catch (JsonProcessingException e) {
                 throw new RuntimeException(e);
             }
@@ -81,7 +88,7 @@ public class Controller {
 
     }
     @GetMapping("/country/{countryISO2code}")
-    public String getSwiftCodesByCountry(@PathVariable String countryISO2code) {
+    public ResponseEntity<String> getSwiftCodesByCountry(@PathVariable String countryISO2code) {
         String branches_sql = "SELECT address, bankName, countryISO2, isHeadquarter, swiftCode FROM branches WHERE countryISO2 = ? "+
                 "UNION "+
                 "SELECT address, bankName, countryISO2, isHeadquarter, swiftCode FROM headquarters WHERE countryISO2 = ?";
@@ -94,11 +101,13 @@ public class Controller {
             PreparedStatement stmt2 = localdb.getConnection().prepareStatement(countryNameSql);
             stmt2.setString(1,countryISO2code);
             ResultSet rs2 = stmt2.executeQuery();
-            String countryName =null;
-            if(rs2.next())
+
+            if(!rs2.next())
             {
-                countryName = rs2.getString("countryName");
+                return new ResponseEntity<>("message: country with this ISO2 code does not exist", HttpStatus.NOT_FOUND);
+
             }
+            String countryName = rs2.getString("countryName");
             List<Branch> branches = new ArrayList<Branch>();
             while (rs.next()) {
                 branches.add(
@@ -116,17 +125,16 @@ public class Controller {
             prettyPrinter.indentArraysWith(new DefaultIndenter("    ", "\n")); // 4 spaces for arrays
             prettyPrinter.indentObjectsWith(new DefaultIndenter("    ", "\n")); // 4 spaces for objects
             try {
-                return mapper.writer(prettyPrinter).writeValueAsString(country);
+                return ResponseEntity.ok(mapper.writer(prettyPrinter).writeValueAsString(country));
             } catch (JsonProcessingException e) {
                 throw new RuntimeException(e);
             }
         }
         catch (SQLException e) {
-            e.printStackTrace();
-            return "Error retrieving SWIFT codes: " + e.getMessage();
+            return new ResponseEntity<>("message: failed to retrieve branches, sql exception", HttpStatus.BAD_REQUEST);
         }
     }
-    @PostMapping("/")
+    @PostMapping("")
     public ResponseEntity<String> postSwift(@RequestBody Map<String, String> branchOrHq)
     {
 
