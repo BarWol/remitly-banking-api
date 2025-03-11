@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
@@ -7,7 +7,7 @@
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>3.2.2</version>
-        <relativePath/> <!-- lookup parent from repository -->
+        <relativePath/>
     </parent>
 
     <groupId>com.remitly</groupId>
@@ -16,7 +16,8 @@
     <packaging>jar</packaging>
 
     <name>remitly-banking-crud-api</name>
-    <description>Spring Boot backend for Remitly internship managing banking data with CRUD and CSV parsing</description>
+    <description>Spring Boot backend for Remitly internship managing banking data with CRUD and CSV parsing
+    </description>
 
     <properties>
         <java.version>17</java.version>
@@ -32,10 +33,7 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-jpa</artifactId>
-        </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-jdbc</artifactId>
@@ -61,18 +59,8 @@
             <version>5.10.1</version>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-core</artifactId>
-            <version>${mockito.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-junit-jupiter</artifactId>
-            <version>${mockito.version}</version>
-            <scope>test</scope>
-        </dependency>
+
+
         <dependency>
             <groupId>org.testcontainers</groupId>
             <artifactId>postgresql</artifactId>
@@ -94,23 +82,20 @@
             <artifactId>commons-csv</artifactId>
             <version>1.10.0</version>
         </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-actuator</artifactId>
-        </dependency>
+
 
     </dependencies>
-<!--    <profiles>-->
-<!--        <profile>-->
-<!--            <id>test</id>-->
-<!--            <activation>-->
-<!--                <activeByDefault>false</activeByDefault>-->
-<!--            </activation>-->
-<!--            <properties>-->
-<!--                <spring.profiles.active>test</spring.profiles.active>-->
-<!--            </properties>-->
-<!--        </profile>-->
-<!--    </profiles>-->
+    <!--    <profiles>-->
+    <!--        <profile>-->
+    <!--            <id>test</id>-->
+    <!--            <activation>-->
+    <!--                <activeByDefault>false</activeByDefault>-->
+    <!--            </activation>-->
+    <!--            <properties>-->
+    <!--                <spring.profiles.active>test</spring.profiles.active>-->
+    <!--            </properties>-->
+    <!--        </profile>-->
+    <!--    </profiles>-->
     <build>
         <plugins>
             <plugin>

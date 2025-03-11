@@ -1,12 +1,11 @@
-
-  datasource:
-    url: jdbc:postgresql://db:5432/example
-    username: postgres
-    password: remitly-4343
-  jpa:
+datasource:
+  url: jdbc:postgresql://db:5432/example
+  username: postgres
+  password: remitly-4343
+jpa:
+  hibernate:
+    ddl-auto: create-drop
+  show-sql: true
+  properties:
     hibernate:
-      ddl-auto: create-drop
-    show-sql: true
-    properties:
-      hibernate:
-        format_sql: true
+      format_sql: true

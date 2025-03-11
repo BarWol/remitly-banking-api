@@ -1,39 +1,58 @@
 package com.remitly.project;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
+
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
-import java.io.FileReader;
-import java.io.IOException;
 import java.io.FileReader;
 import java.sql.*;
 import java.util.Properties;
-import org.slf4j.Logger;
 
 @Component
 public class LocalDatabase implements AutoCloseable {
-   private Connection connection;
-   private int port;
-   private String username;
-   private String database;
-   private final Logger logger =  LoggerFactory.getLogger(getClass());
+    private final Logger logger = LoggerFactory.getLogger(getClass());
+    private Connection connection;
+    private int port;
+    private String username;
+    private String database;
 
 
-   public Connection getConnection() {return connection;
-   }
-   public int getPort() {
+    public LocalDatabase(int port, String host) {
+        this.port = port;
+        this.database = "example";
+        this.username = "postgres";
+        String password = "remitly-4343";
+        this.connect(password, host);
+
+    }
+
+    public LocalDatabase() {
+        this.port = 5_432;
+        this.database = "example";
+        this.username = "postgres";
+        String password = "remitly-4343";
+        this.connect(password, "db");
+
+    }
+
+    public Connection getConnection() {
+        return connection;
+    }
+
+    public int getPort() {
         return port;
-   }
-   public String getUsername() {
+    }
+
+    public String getUsername() {
         return username;
-   }
+    }
 
-
-   public void connect(String password,String host) {
+    public void connect(String password, String host) {
         Properties props = new Properties();
-        String url = String.format("jdbc:postgresql://%s:%d/%s",host, port, database);
+        String url = String.format("jdbc:postgresql://%s:%d/%s", host, port, database);
         props.setProperty("user", username);
         props.setProperty("password", password);
         Connection conn = null;
@@ -63,22 +82,6 @@ public class LocalDatabase implements AutoCloseable {
         }
 
     }
-    public LocalDatabase(int port, String host){
-        this.port = port;
-        this.database = "example";
-        this.username = "postgres";
-        String password = "remitly-4343";
-        this.connect(password,host);
-
-   }
-   public LocalDatabase(){
-        this.port = 5_432;
-        this.database = "example";
-        this.username = "postgres";
-        String password = "remitly-4343";
-        this.connect(password,"db");
-
-    }
 
     @Override
     public void close() throws Exception {
@@ -86,9 +89,7 @@ public class LocalDatabase implements AutoCloseable {
     }
 
 
-
-
-    public void create_tables(){
+    public void create_tables() {
         String sql = "CREATE TABLE IF NOT EXISTS headquarters (\n" +
                 "    address VARCHAR(255),\n" +
                 "    bankName VARCHAR(100) NOT NULL,\n" +
@@ -116,22 +117,19 @@ public class LocalDatabase implements AutoCloseable {
         }
     }
 
-    public void process_csv(String csv_file_path){
+    public void process_csv(String csv_file_path) {
         this.create_tables();
-        try
-            {
+        try {
             FileReader reader = new FileReader(csv_file_path);
             CSVParser parser = new CSVParser(reader, CSVFormat.DEFAULT.withFirstRecordAsHeader());
-            for (CSVRecord record : parser)
-            {
+            for (CSVRecord record : parser) {
                 String swiftCode = record.get("SWIFT CODE");
                 String checkSQL = "SELECT COUNT(*) FROM headquarters WHERE swiftCode = ?";
                 PreparedStatement checkStmt = connection.prepareStatement(checkSQL);
                 checkStmt.setString(1, swiftCode);
                 ResultSet rs = checkStmt.executeQuery();
                 rs.next();
-                if (rs.getInt(1) == 0)
-                {  // Only insert if it doesn't exist
+                if (rs.getInt(1) == 0) {  // Only insert if it doesn't exist
                     if (swiftCode.matches(".*XXX")) {
                         String insertSQL = "INSERT INTO headquarters (address, bankName, countryISO2, countryName, isHeadquarter, swiftCode) VALUES (?, ?, ?, ?, ?, ?)";
                         PreparedStatement preparedStatement = connection.prepareStatement(insertSQL);
@@ -167,12 +165,11 @@ public class LocalDatabase implements AutoCloseable {
                 }
             }
             System.out.println("Data successfully inserted into the database.");
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             System.out.println(e);
         }
     }
+
     private String getHqSwiftCode(String prefix) {
         String sql = "SELECT swiftCode FROM headquarters WHERE swiftCode like ?";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
