@@ -59,3 +59,4 @@ To use this project, ensure that **Docker** is installed
 1. clone the repository
 2. docker-compose up --build
 3. mvn test to run the integration api tests
+

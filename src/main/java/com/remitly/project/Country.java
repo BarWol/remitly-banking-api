@@ -15,8 +15,7 @@ public class Country {
     private List<Branch> swiftCodes;
 
 
-    Country(String countryISO2, String countryName, List<Branch> swiftCodes)
-    {
+    Country(String countryISO2, String countryName, List<Branch> swiftCodes) {
         this.countryISO2 = countryISO2;
         this.countryName = countryName;
         this.swiftCodes = swiftCodes;
