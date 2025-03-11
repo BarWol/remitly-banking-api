@@ -5,19 +5,21 @@ The application parses a **CSV file** to populate the database and provides **RE
 
 ## Features  
 
-- **CRUD Operations** – Full support for creating, reading, updating, and deleting banking records.  
-- **CSV Parsing** – Automatically loads banking data from a CSV file into the database.  
-- **PostgreSQL Database** – Persistent storage for banking data.  
-- **Docker Integration** – Simplified setup and deployment using Docker.  
-- **RESTful API** – Provides endpoints for managing banking data, including headquarters and branches.  
-
+- **Spring Boot**  
+- **PostgreSQL** 
+- **Docker** 
+- **CSV Parsing** 
+- **RESTful API Design**
+- **Postman**
+- **Maven**
+  
 ## Technologies Used  
 
-- **Spring Boot** – Backend framework for building the API.  
-- **PostgreSQL** – Relational database for storing banking data.  
-- **Docker** – Containerization for easy deployment and development.  
-- **CSV Parsing** – Utilizes OpenCSV (or similar libraries) for processing and loading data.  
-- **RESTful Web Services** – Exposes endpoints for seamless data interaction.  
+- **Spring Boot** 
+- **PostgreSQL**   
+- **Docker**   
+- **CSV Parsing**   
+- **RESTful Web Services**   
 
 ## API Endpoints  
 
@@ -31,23 +33,12 @@ The application parses a **CSV file** to populate the database and provides **RE
 
 ## Testing  
 
-Due to time constraints, the project lacks full unit test coverage. However, thorough manual testing during development was conducted using:  
-
+Due to time constraints, the project lacks full unit test coverage with mocking. However, thorough manual testing during development was conducted using:  
 - **Postman** – For API request validation and response testing.  
-- **SQL Queries** – To verify database changes and data integrity.  
-- **Integration** – Some integration tests were implemented to validate API responses.  
+- **SQL Queries** – To verify database changes and data integrity.
 
-## Learning Experience  
+  ## Integration tests are present
 
-This project provided a great opportunity to enhance my skills in:  
-
-- **Spring Boot**  
-- **PostgreSQL** 
-- **Docker** 
-- **CSV Parsing** 
-- **RESTful API Design**
-- **Postman**
-- **Maven**
 
 ### Challenges Faced  
 
