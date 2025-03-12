@@ -8,6 +8,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.io.FileReader;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.sql.*;
 import java.util.Properties;
 
@@ -24,7 +26,7 @@ public class LocalDatabase implements AutoCloseable {
         this.port = port;
         this.database = "example";
         this.username = "postgres";
-        String password = "remitly-4343";
+        String password = getPassword();
         this.connect(password, host);
 
     }
@@ -33,11 +35,17 @@ public class LocalDatabase implements AutoCloseable {
         this.port = 5_432;
         this.database = "example";
         this.username = "postgres";
-        String password = "remitly-4343";
+        String password = getPassword();
         this.connect(password, "db");
 
     }
-
+    protected String getPassword() {
+        try {
+            return new String(Files.readAllBytes(Paths.get("/run/secrets/db-password"))).trim();
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to read database password from environment variable", e);
+        }
+    }
     public Connection getConnection() {
         return connection;
     }

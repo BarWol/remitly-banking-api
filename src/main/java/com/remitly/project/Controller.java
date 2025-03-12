@@ -25,6 +25,7 @@ public class Controller {
 
     @Autowired
     public Controller(LocalDatabase localdatabase) {
+        System.out.println("Database Password: " + localdatabase.getPassword());
         this.localdb = localdatabase;
     }
 
