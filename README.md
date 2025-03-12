@@ -45,8 +45,8 @@ Due to time constraints, the project lacks full unit test coverage with mocking.
 While coding was relatively straightforward and enjoyable, organizing the project properly took some extra effort.  
 
 ---
-
-To use this project, ensure that **Docker** is installed
+### How to run instructions:
+To run this project, ensure that **Docker** is installed
 1. clone the repository
 2. docker-compose up --build
 3. mvn test to run the integration api tests
